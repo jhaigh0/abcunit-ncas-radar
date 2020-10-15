@@ -1,0 +1,6 @@
+xarray
+
+pylint
+
+# Testing
+pytest
