@@ -1,4 +1,7 @@
 import argparse
+from datetime import timedelta
+import dateutil
+import dateutil.parser as dp
 import os
 import SETTINGS
 import subprocess
@@ -40,32 +43,38 @@ def loop_over_days(args):
     end_date = ''.join(args.end)
 
     #validate dates
-    start_date_time = start_date # To be replaced with proper paresing
-    end_date_time = end_date     # Can put in try / error check for format 
+    try:
+        start_date_time = dp.isoparse(start_date)
+        end_date_time = dp.isoparse(end_date)
+    except ValueError as err:
+        print('[ERROR] Date format is incorect')
+        print(err)
+        exit 1 # Not sure if this is best solution, should probably output error in backend
 
     if start_date_time > end_date_time:
-        raise ValueError('Start date but be before end date')
+        # This should be dealt with in the same way as above, whatever that becomes
+        raise ValueError('Start date must be before end date')
 
     current_date_time = start_date_time
     current_directory = os.getcwd()
 
     while current_date_time <= end_date_time: # Once again to be done properly
 
-        print(f"[INFO] Running for: {current_date_time}")
+        current_date = current_date_time.strftime("%Y%m%d")
+        print(f"[INFO] Running for: {current_date}")
 
-        cmd = f"{current_directory}/convert_raine_x_band_day.py -t {scan_type} -d {current_date_time}"
+        cmd = f"{current_directory}/convert_raine_x_band_day.py -t {scan_type} -d {current_date}"
         print(f"[INFO] Running: {cmd}")
         subprocess.call(cmd, shell=True)
 
-        current_date_time += 1 # add a day
+        current_date_time += timedelta(days=1)
+
 
 def main():
     """Runs script if called on command line"""
 
     args = arg_parse_all()
     loop_over_days(args)
-
-    
 
 
 if __name__ == '__main__':
