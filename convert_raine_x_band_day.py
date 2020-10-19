@@ -14,7 +14,6 @@ def arg_parse_day():
     """
 
     parser = argparse.ArgumentParser()
-
     type_choices = ['vol','ele','azi']
 
     parser.add_argument('-t', '--scan_type', nargs=1, type=str, choices=type_choices, required=True,
@@ -63,7 +62,7 @@ def loop_over_chunks(args):
 
         # Hour has to be formatted properly 
         for hour in [current_day_date_time + timedelta(hours=x) for x in range(SETTINGS.CHUNK_SIZE)]
-            hour_str = hour.strftime("%Y%m%d")
+            hour_str = hour.strftime("%Y%m%d%H")
             hours.append(hour_str) 
 
         #incement current_day_date_time somehow
