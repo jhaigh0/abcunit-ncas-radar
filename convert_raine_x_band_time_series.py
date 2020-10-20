@@ -49,7 +49,7 @@ def loop_over_days(args):
     except ValueError as err:
         print('[ERROR] Date format is incorect')
         print(err)
-        exit 1 # Not sure if this is best solution, should probably output error in backend
+        exit 1 # Not sure if this is best solution
 
     if start_date_time > end_date_time:
         # This should be dealt with in the same way as above, whatever that becomes

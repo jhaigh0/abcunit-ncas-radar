@@ -42,13 +42,15 @@ def loop_over_chunks(args):
     if day_date_time < min_date or day_date_time > max_date:
         raise ValueError(f'Date must be in range {SETTINGS.MIN_START_DATE} - {SETTINGS.MAX_END_DATE}')
 
+    if 24 % SETTINGS.CHUNK_SIZE != 0:
+        raise ValueError(f'Chunk size ({SEETINGS.CHUNK_SIZE}) does not divide evenly into 24')
+
     n_chunks = 24 / SETTINGS.CHUNK_SIZE # Division is weird, check this is the best way
 
     if n_chunks < 1:
         raise ValueError('SETTINGS.CHUNK_SIZE must be 24 or less')
 
-    # This is the point output dirs start to get setup
-    # Leaving for now to think about how backend would work
+    # Need to setup outputs for LOTUS logs at this point, probably just included them in settings
 
     start_day = day_date_time.day
     current_day_date_time = day_date_time
@@ -72,6 +74,7 @@ def loop_over_chunks(args):
 
         wallclock = f"{SETTINGS.CHUNK_SIZE / 2}:00" #this needs to be integer division
 
+        # Replace somethings with LOTUS outputs
         slurm_command = f"sbatch -p {SETTINGS.QUEUE} -t {wallclock} -o something " \
                         f"-e something {current_directory}/convert_raine_x_band_hour.py " \
                         f"-t {scan_type} {' '.join(hours)}"
